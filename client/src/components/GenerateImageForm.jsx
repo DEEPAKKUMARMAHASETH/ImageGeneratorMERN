@@ -62,8 +62,6 @@ const GenerateImageForm = ({
       const res = await axios.post(url, {
         prompt: post.prompt,
         name: post.name || 'guest'
-      }, {
-        withCredentials: true, 
       });
       console.log(res);
       setPost({
