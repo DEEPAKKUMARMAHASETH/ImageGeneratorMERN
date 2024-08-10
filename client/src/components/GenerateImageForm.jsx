@@ -55,19 +55,25 @@ const GenerateImageForm = ({
   const [error, setError] = useState("");
   const generateImageFun = async () => {
     setGenerateImageLoading(true);
-    await GenerateAIImage({ prompt: post.prompt,name: post.name || 'guest' })
-      .then((res) => {
-        setPost({
-          ...post,
-          photo: `data:image/jpge;base64,${res?.data?.photo}`,
-        });
-        setGenerateImageLoading(false);
-      })
-      .catch((error) => {
-        console.log(error)
-        setError(error?.response?.data?.message);
-        setGenerateImageLoading(false);
+    
+    try {
+      const res = await axios.post('https://image-generator-mern-backend.vercel.app/api/generateImage/', {
+        prompt: post.prompt,
+        name: post.name || 'guest'
       });
+      console.log(res);
+      setPost({
+        ...post,
+        photo: `data:image/jpeg;base64,${res.data.photo}`, // Corrected MIME type to 'jpeg'
+      });
+      
+    } catch (error) {
+      console.log(error);
+      setError(error.response?.data?.message || 'An error occurred while generating the image.');
+      
+    } finally {
+      setGenerateImageLoading(false);
+    }
   };
   const createPostFun = async () => {
     setCreatePostLoading(true);
