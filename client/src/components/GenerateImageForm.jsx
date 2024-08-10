@@ -5,6 +5,7 @@ import Button from "./button";
 import TextInput from "./TextInput";
 import { AutoAwesome, CreateRounded } from "@mui/icons-material";
 import { CreatePost, GenerateAIImage } from "../api";
+import axios from "axios";
 
 const Form = styled.div`
   flex: 1;
@@ -55,8 +56,8 @@ const GenerateImageForm = ({
   const [error, setError] = useState("");
   const generateImageFun = async () => {
     setGenerateImageLoading(true);
-    // const url = "http://localhost:8080/api/generateImage/"
-    const url = "https://image-generator-mern-backend.vercel.app/api/generateImage/"
+    const url = "http://localhost:8080/api/generateImage/"
+    // const url = "https://image-generator-mern-backend.vercel.app/api/generateImage/"
     try {
       const res = await axios.post(url, {
         prompt: post.prompt,
