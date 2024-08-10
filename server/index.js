@@ -35,7 +35,7 @@ app.use("/api/generateImage", GenerateImageRouter);
 //Default get
 app.get("/", async (req, res) => {
   res.status(200).json({
-    message: "Hello GFG Developers!",
+    message: "Welcome to The AI Image Generator APP.",
   });
 });
 
