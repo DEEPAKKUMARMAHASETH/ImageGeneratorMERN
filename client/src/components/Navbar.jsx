@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import { AddRounded, ExploreRounded } from "@mui/icons-material";
 import Button from "./button";
 
@@ -26,7 +26,7 @@ const Navbar = () => {
   const path = location.pathname.split("/");
   return (
     <Container>
-      ImageAI
+      <Link style={{textDecoration:'none',color:'inherit'}} to="/">ImageAI</Link>
       {path[1] === "post" ? (
         <Button
           onClick={() => navigate("/")}
