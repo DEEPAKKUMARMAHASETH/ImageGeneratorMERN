@@ -13,8 +13,14 @@ const allowedOrigins = [
   'https://image-generator-mern.vercel.app',
   'http://localhost:3000', // Replace with your frontend port if different
 ];
-
-app.use(cors("*"));
+const corsOpts = {
+  origin: '*',
+  credentials: true,
+  methods: ['GET','POST','HEAD','PUT','PATCH','DELETE'],
+  allowedHeaders: ['Content-Type'],
+  exposedHeaders: ['Content-Type']
+};
+app.use(cors(corsOpts));
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: true }));
 // error handler
