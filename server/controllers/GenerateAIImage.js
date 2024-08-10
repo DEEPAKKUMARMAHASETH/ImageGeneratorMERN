@@ -32,19 +32,23 @@ console.log(prompt ,name);
 
     const generatedImage = response.data[0].b64_json;
 
-    // Prefix the base64 string with the proper data URI scheme
-    const imageDataUri = `data:image/png;base64,${generatedImage}`;
-
-    // Upload the image to Cloudinary
-    const uploadResult = await cloudinary.uploader.upload(imageDataUri);
-
-    // Create a new post with the uploaded image's URL
-    const newPost = await Post.create({
-      name,
-      prompt,
-      photo: uploadResult.secure_url,
-    });
-  console.log(newPost)
+   try {
+     // Prefix the base64 string with the proper data URI scheme
+     const imageDataUri = `data:image/png;base64,${generatedImage}`;
+ 
+     // Upload the image to Cloudinary
+     const uploadResult = await cloudinary.uploader.upload(imageDataUri);
+ 
+     // Create a new post with the uploaded image's URL
+     const newPost = await Post.create({
+       name,
+       prompt,
+       photo: uploadResult.secure_url,
+     });
+   console.log(newPost)
+   } catch (error) {
+    
+   }
     return res.status(200).json({ photo: generatedImage });
   } catch (error) {
     console.log(error);
