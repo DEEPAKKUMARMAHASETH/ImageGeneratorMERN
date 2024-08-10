@@ -9,17 +9,27 @@ dotenv.config();
 const PORT = process.env.PORT || 8080
 const app = express();
 //dummy commit
+const allowedOrigins = [
+  'https://image-generator-mern.vercel.app',
+  'http://localhost:3000', // Replace with your frontend port if different
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type'],  // Add any other headers your app might use
+  preflightContinue: false,
+  optionsSuccessStatus: 204
+}));
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: true }));
-app.use(cors({
-  origin: [
-    "http://localhost:3000",
-    "http://localhost:3001",
-    "https://image-generator-mern.vercel.app/"
-  ],
-  credentials: true 
-}));
-
 // error handler
 app.use((err, req, res, next) => {
   const status = err.status || 500;
