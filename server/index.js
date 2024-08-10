@@ -8,8 +8,22 @@ import GenerateImageRouter from "./routes/GenerateImage.js";
 dotenv.config();
 const PORT = process.env.PORT || 8080
 const app = express();
+const allowedOrigins = [
+  'https://image-generator-mern.vercel.app',
+  'http://localhost:3000',
+];
+
 app.use(cors({
-  origin: '*',
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type'],
 }));
 //dummy commit
 app.use(express.json({ limit: "50mb" }));

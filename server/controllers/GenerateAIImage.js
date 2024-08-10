@@ -27,6 +27,7 @@ console.log(prompt ,name);
       n: 1,
       size: "1024x1024",
       response_format: "b64_json",
+      model: "dall-e-3"
     });
 
     const generatedImage = response.data[0].b64_json;
