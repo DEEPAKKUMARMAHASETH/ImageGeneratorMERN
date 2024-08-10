@@ -55,11 +55,14 @@ const GenerateImageForm = ({
   const [error, setError] = useState("");
   const generateImageFun = async () => {
     setGenerateImageLoading(true);
-    
+    const url = "http://localhost:8080/api/generateImage/"
+    // const url = "https://image-generator-mern-backend.vercel.app/api/generateImage/"
     try {
-      const res = await axios.post('https://image-generator-mern-backend.vercel.app/api/generateImage/', {
+      const res = await axios.post(url, {
         prompt: post.prompt,
         name: post.name || 'guest'
+      }, {
+        withCredentials: true, 
       });
       console.log(res);
       setPost({
