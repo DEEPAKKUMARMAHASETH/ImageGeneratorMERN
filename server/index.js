@@ -6,21 +6,36 @@ import PostRouter from "./routes/Posts.js";
 import GenerateImageRouter from "./routes/GenerateImage.js";
 
 dotenv.config();
-const PORT = process.env.PORT || 8080
+const PORT = process.env.PORT || 8080;
 const app = express();
-//dummy commit
+
+// CORS Configuration
 const allowedOrigins = [
   'https://image-generator-mern.vercel.app',
   'http://localhost:3000', // Replace with your frontend port if different
 ];
-app.use(cors(
-  {
-    origin:allowedOrigins,
+
+// Handle CORS and preflight requests
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.header("Access-Control-Allow-Origin", origin);
   }
-));
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+  
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(200);
+  }
+  
+  next();
+});
+
+// Middleware
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: true }));
-// error handler
+
+// Error handler
 app.use((err, req, res, next) => {
   const status = err.status || 500;
   const message = err.message || "Something went wrong!";
@@ -31,17 +46,18 @@ app.use((err, req, res, next) => {
   });
 });
 
+// Routers
 app.use("/api/post", PostRouter);
 app.use("/api/generateImage", GenerateImageRouter);
 
-//Default get
+// Default get
 app.get("/", async (req, res) => {
   res.status(200).json({
     message: "Welcome to The AI Image Generator APP.",
   });
 });
 
-//function to connect to mongodb
+// Function to connect to MongoDB
 const connectDB = () => {
   mongoose.set("strictQuery", true);
   mongoose
@@ -53,11 +69,11 @@ const connectDB = () => {
     });
 };
 
-//function to start the server
+// Function to start the server
 const startServer = async () => {
   try {
     connectDB();
-    app.listen(PORT, () => console.log("Server started on port 8080"));
+    app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
   } catch (error) {
     console.log(error);
   }

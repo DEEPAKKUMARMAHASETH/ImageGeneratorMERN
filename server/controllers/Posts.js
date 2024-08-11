@@ -16,6 +16,7 @@ cloudinary.config({
 export const getAllPosts = async (req, res, next) => {
   try {
     const posts = await Post.find({});
+    console.log(posts)
     return res.status(200).json({ success: true, data: posts });
   } catch (error) {
     next(
