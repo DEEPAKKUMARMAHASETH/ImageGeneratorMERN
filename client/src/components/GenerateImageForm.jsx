@@ -57,7 +57,7 @@ const GenerateImageForm = ({
   const generateImageFun = async () => {
     setGenerateImageLoading(true);
   
-    const url = "https://image-generator-mern-backend.vercel.app/api/generateImage/";
+    const url = "https://imagegeneratormern.onrender.com/api/generateImage/";
   // const url = "http://localhost:8080/api/generateImage/"
     try {
       console.log(url)
