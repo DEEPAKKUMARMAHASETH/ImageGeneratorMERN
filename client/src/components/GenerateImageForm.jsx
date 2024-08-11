@@ -56,27 +56,43 @@ const GenerateImageForm = ({
   const [error, setError] = useState("");
   const generateImageFun = async () => {
     setGenerateImageLoading(true);
-    // const url = "http://localhost:8080/api/generateImage/"
-    const url = "https://image-generator-mern-backend.vercel.app/api/generateImage/"
+  
+    const url = "https://image-generator-mern-backend.vercel.app/api/generateImage/";
+  // const url = "http://localhost:8080/api/generateImage/"
     try {
-      const res = await axios.post(url, {
-        prompt: post.prompt,
-        name: post.name || 'guest'
+      console.log(url)
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json', // Set the Content-Type header
+          // 'Authorization': 'Bearer your-token', // Add this line if you need to include an Authorization token
+        },
+        body: JSON.stringify({
+          prompt: post.prompt,
+          name: post.name || 'guest',
+        }),
       });
-      console.log(res);
+  
+      if (!response.ok) {
+        throw new Error(`Error: ${response.statusText}`);
+      }
+  
+      const data = await response.json();
+  
       setPost({
         ...post,
-        photo: `data:image/jpeg;base64,${res.data.photo}`, // Corrected MIME type to 'jpeg'
+        photo: `${data.photo}`, 
       });
       
     } catch (error) {
-      console.log(error);
-      setError(error.response?.data?.message || 'An error occurred while generating the image.');
+      console.error(error);
+      setError(error.message || 'An error occurred while generating the image.');
       
     } finally {
       setGenerateImageLoading(false);
     }
   };
+  
   const createPostFun = async () => {
     setCreatePostLoading(true);
     await CreatePost(post)

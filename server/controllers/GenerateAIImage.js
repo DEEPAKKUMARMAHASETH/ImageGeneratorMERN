@@ -20,7 +20,7 @@ cloudinary.config({
 export const generateImage = async (req, res, next) => {
   try {
     const { prompt, name } = req.body;
-console.log(prompt ,name);
+    console.log(prompt ,name);
     // Generate the image from OpenAI
     const response = await openai.images.generate({
       prompt,
@@ -32,24 +32,24 @@ console.log(prompt ,name);
 
     const generatedImage = response.data[0].b64_json;
 
-  //  try {
-  //    // Prefix the base64 string with the proper data URI scheme
-  //    const imageDataUri = `data:image/png;base64,${generatedImage}`;
+   try {
+     // Prefix the base64 string with the proper data URI scheme
+     const imageDataUri = `data:image/png;base64,${generatedImage}`;
  
-  //    // Upload the image to Cloudinary
-  //    const uploadResult = await cloudinary.uploader.upload(imageDataUri);
+     // Upload the image to Cloudinary
+     const uploadResult = await cloudinary.uploader.upload(imageDataUri);
  
-  //    // Create a new post with the uploaded image's URL
-  //    const newPost = await Post.create({
-  //      name,
-  //      prompt,
-  //      photo: uploadResult.secure_url,
-  //    });
-  //  console.log(newPost)
-  //  } catch (error) {
+     // Create a new post with the uploaded image's URL
+     const newPost = await Post.create({
+       name,
+       prompt,
+       photo: uploadResult.secure_url,
+     });
+   console.log(newPost)
+   return res.status(200).json({ photo: newPost?.photo });
+   } catch (error) {
     
-  //  }
-    return res.status(200).json({ photo: generatedImage });
+   }
   } catch (error) {
     console.log(error);
     next(

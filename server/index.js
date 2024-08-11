@@ -14,10 +14,8 @@ const allowedOrigins = [
   'http://localhost:3000', // Replace with your frontend port if different
 ];
 const corsOpts = {
-  origin: '*',
+  origin: allowedOrigins,
   methods: ['GET','POST','HEAD','PUT','PATCH','DELETE'],
-  allowedHeaders: ['Content-Type'],
-  exposedHeaders: ['Content-Type']
 };
 app.use(cors(corsOpts));
 app.use(express.json({ limit: "50mb" }));
