@@ -21,6 +21,7 @@ const Container = styled.div`
 `;
 
 const Headline = styled.div`
+  text-align: center;
   font-size: 34px;
   font-weight: 500;
   color: ${({ theme }) => theme.text_primary};

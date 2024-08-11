@@ -131,7 +131,7 @@ const GenerateImageForm = ({
           handelChange={(e) => setPost({ ...post, prompt: e.target.value })}
         />
         {error && <div style={{ color: "red" }}>{error}</div>}
-        ** You can post the AI Generated Image to the Community **
+        {/* ** You can post the AI Generated Image to the Community ** */}
       </Body>
       <Actions>
         <Button
