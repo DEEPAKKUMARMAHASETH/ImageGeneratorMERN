@@ -142,7 +142,7 @@ const GenerateImageForm = ({
           isDisabled={post.prompt === ""}
           onClick={() => generateImageFun()}
         />
-        <Button
+        {/* <Button
           text="Post Image"
           flex
           type="secondary"
@@ -152,7 +152,7 @@ const GenerateImageForm = ({
             post.name === "" || post.prompt === "" || post.photo === ""
           }
           onClick={() => createPostFun()}
-        />
+        /> */}
       </Actions>
     </Form>
   );
