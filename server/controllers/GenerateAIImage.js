@@ -20,7 +20,6 @@ cloudinary.config({
 export const generateImage = async (req, res, next) => {
   try {
     const { prompt, name } = req.body;
-    console.log(prompt ,name);
     // Generate the image from OpenAI
     const response = await openai.images.generate({
       prompt,
@@ -45,7 +44,6 @@ export const generateImage = async (req, res, next) => {
        prompt,
        photo: uploadResult.secure_url,
      });
-   console.log(newPost)
    return res.status(200).json({ photo: newPost?.photo });
    } catch (error) {
     

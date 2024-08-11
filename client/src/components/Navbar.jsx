@@ -30,7 +30,7 @@ const Navbar = () => {
       {path[1] === "post" ? (
         <Button
           onClick={() => navigate("/")}
-          text="Explore Posts"
+          text="Explore Images"
           leftIcon={
             <ExploreRounded
               style={{
@@ -43,7 +43,7 @@ const Navbar = () => {
       ) : (
         <Button
           onClick={() => navigate("/post")}
-          text="Create new post"
+          text="Generate New Image"
           leftIcon={
             <AddRounded
               style={{
