@@ -15,9 +15,27 @@ cloudinary.config({
 
 export const getAllPosts = async (req, res, next) => {
   try {
-    const posts = await Post.find({});
-    console.log(posts)
-    return res.status(200).json({ success: true, data: posts });
+    const pageSize = 14;
+    const pageNumber = parseInt(req.query.pageNumber) || 1;
+console.log(pageNumber);
+    // Calculate total number of posts
+    const totalPosts = await Post.countDocuments({});
+
+    // Calculate total pages
+    const totalPages = Math.ceil(totalPosts / pageSize);
+
+    // Retrieve paginated posts in descending order, so the newest posts appear first
+    const posts = await Post.find({})
+      .sort({ _id: -1 })  // Ensures the newest posts are retrieved first
+      .skip((pageNumber - 1) * pageSize)
+      .limit(pageSize);
+    let reversedPosts = posts.reverse();
+    console.log(reversedPosts)
+    return res.status(200).json({ 
+      success: true, 
+      data: reversedPosts, 
+      totalPages 
+    });
   } catch (error) {
     next(
       createError(
@@ -27,6 +45,9 @@ export const getAllPosts = async (req, res, next) => {
     );
   }
 };
+
+
+
 
 //  Create Post
 export const createPost = async (req, res, next) => {

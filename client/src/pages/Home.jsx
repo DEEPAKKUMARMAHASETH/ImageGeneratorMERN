@@ -2,9 +2,8 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import SearchBar from "../components/SearchBar";
 import ImageCard from "../components/ImageCard";
-import { CircularProgress } from "@mui/material";
-import { GetPosts } from "../api";
-
+import { Button, CircularProgress } from "@mui/material";
+import axios from 'axios';
 const Container = styled.div`
   height: 100%;
   overflow-y: scroll;
@@ -67,33 +66,56 @@ const CardWrapper = styled.div`
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
+  const [pageNumber, setPageNumber] = useState(1);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [search, setSearch] = useState("");
   const [filteredPosts, setFilteredPosts] = useState([]);
+  const [hasMore, setHasMore] = useState(true);
 
+  // let baseURL = 'http://localhost:8080/api/';
+let baseURL = "https://imagegeneratormern.onrender.com/api/"
   const getPosts = async () => {
     setLoading(true);
-    await GetPosts()
-      .then((res) => {
-        setLoading(false);
-        setPosts(res?.data?.data);
-        setFilteredPosts(res?.data?.data);
-      })
-      .catch((error) => {
-        setError(error?.response?.data?.message);
-        setLoading(false);
-      });
+    try {
+      const res = await axios.get(`${baseURL}post?pageNumber=${pageNumber}`);
+      setLoading(false);
+  
+      // Create a Set of existing post IDs for fast lookup
+      const existingPostIds = new Set(posts.map(post => post._id));
+  
+      // Filter out duplicates in the new posts based on existing post IDs
+      const uniqueNewPosts = res.data.data.filter(
+        (newPost) => !existingPostIds.has(newPost._id)
+      );
+  
+      // Combine existing posts with unique new posts, avoiding duplicates
+      const updatedPosts = [...uniqueNewPosts ,...posts];
+  
+      // Update both posts and filteredPosts states with the new list
+      setPosts(updatedPosts);
+      setFilteredPosts(updatedPosts); // assuming the same logic applies for filtering
+  
+      // Check if there are more pages
+      if (pageNumber >= res.data.totalPages) {
+        setHasMore(false);
+      }
+    } catch (error) {
+      setError(error?.response?.data?.message);
+      setLoading(false);
+    }
   };
+  
+  
 
   useEffect(() => {
     getPosts();
-  }, []);
+  }, [pageNumber]);
 
-  //Search
   useEffect(() => {
     if (!search) {
       setFilteredPosts(posts);
+      return;
     }
 
     const SearchFilteredPosts = posts.filter((post) => {
@@ -107,11 +129,15 @@ const Home = () => {
       return promptMatch || authorMatch;
     });
 
-    if (search) {
-      setFilteredPosts(SearchFilteredPosts);
-    }
+    setFilteredPosts(SearchFilteredPosts);
   }, [posts, search]);
 
+  const loadMorePosts = () => {
+    if (hasMore) {
+      setPageNumber((prevPageNumber) => prevPageNumber + 1);
+    }
+  };
+  console.log(pageNumber)
   return (
     <Container>
       <Headline>
@@ -121,7 +147,7 @@ const Home = () => {
       <SearchBar search={search} setSearch={setSearch} />
       <Wrapper>
         {error && <div style={{ color: "red" }}>{error}</div>}
-        {loading ? (
+        {loading && pageNumber === 1 ? (
           <CircularProgress />
         ) : (
           <CardWrapper>
@@ -135,6 +161,10 @@ const Home = () => {
                   .map((item, index) => (
                     <ImageCard key={index} item={item} />
                   ))}
+                {hasMore && !loading && (
+                  <Button onClick={loadMorePosts}>Load More</Button>
+                )}
+                {loading && <CircularProgress />}
               </>
             )}
           </CardWrapper>
@@ -143,5 +173,6 @@ const Home = () => {
     </Container>
   );
 };
+
 
 export default Home;

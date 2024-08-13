@@ -13,6 +13,7 @@ const app = express();
 const allowedOrigins = [
   'https://image-generator-mern.vercel.app',
   'http://localhost:3000', // Replace with your frontend port if different
+  'http://localhost:3001', // Replace with your frontend port if different
 ];
 
 // Handle CORS and preflight requests
