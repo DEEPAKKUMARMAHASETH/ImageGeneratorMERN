@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import GenerateImageForm from "../components/GenerateImageForm";
 import GeneratedImageCard from "../components/GeneratedImageCard";
-
+import { DownloadRounded } from "@mui/icons-material";
+import FileSaver from "file-saver";
+import { Button } from "@mui/material";
 const Container = styled.div`
   height: 100%;
   overflow-y: scroll;
@@ -30,7 +32,15 @@ const Wrapper = styled.div`
     flex-direction: column;
   }
 `;
-
+const GeneratedPicWrapper = styled.div`
+  width:50%;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 4px;
+`
 const CreatePost = () => {
   const [generateImageLoading, setGenerateImageLoading] = useState(false);
   const [createPostLoading, setCreatePostLoading] = useState(false);
@@ -50,7 +60,11 @@ const CreatePost = () => {
           generateImageLoading={generateImageLoading}
           setCreatePostLoading={setCreatePostLoading}
         />
-        <GeneratedImageCard src={post?.photo} loading={generateImageLoading} />
+        <GeneratedPicWrapper>
+          <GeneratedImageCard src={post?.photo} loading={generateImageLoading} />
+          {post?.photo &&  
+          <Button onClick={() => FileSaver.saveAs(post?.photo, "download.jpg")}>Download</Button>}
+        </GeneratedPicWrapper>
       </Wrapper>
     </Container>
   );
